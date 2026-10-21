@@ -3,3 +3,7 @@ assets/data/
 # Local settings: where the export folder is. Never committed.
 .atlas-local
 .DS_Store
+# Names the guard must refuse; it would publish them if committed.
+.atlas-denylist
+# Claude Code settings for this machine only.
+.claude/settings.local.json

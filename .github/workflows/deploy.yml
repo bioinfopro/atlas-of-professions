@@ -1,0 +1,86 @@
+# Deploy main's site with one data release to GitHub Pages.
+# Started by scripts/publish-release.sh; run it by hand to roll back to an
+# earlier release id. The data comes from the draft release "data-<id>" and
+# never enters git.
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_id:
+        description: "Data release id (e.g. 2026-10a)"
+        required: true
+      sha256:
+        description: "sha256 of that release's data file (printed by publish-release.sh)"
+        required: true
+
+permissions: {}
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # draft releases are visible only with write access; nothing here writes
+    steps:
+      - name: Check inputs
+        env:
+          RELEASE_ID: ${{ inputs.release_id }}
+          SHA256: ${{ inputs.sha256 }}
+        run: |
+          [[ "$RELEASE_ID" =~ ^[0-9]{4}-[0-9]{2}[a-z]$ ]] || { echo "bad release id"; exit 1; }
+          [[ "$SHA256" =~ ^[0-9a-f]{64}$ ]] || { echo "bad sha256"; exit 1; }
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Fetch the data from the draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_ID: ${{ inputs.release_id }}
+        run: |
+          asset="$(gh api "repos/$GITHUB_REPOSITORY/releases" --paginate \
+            --jq ".[] | select(.draft and .tag_name == \"data-$RELEASE_ID\") | .assets[] | select(.name == \"dashboard-data.json\") | .id")"
+          [ "$(echo "$asset" | grep -c .)" = 1 ] || { echo "no single draft data-$RELEASE_ID with dashboard-data.json"; exit 1; }
+          mkdir -p assets/data
+          gh api -H "Accept: application/octet-stream" "repos/$GITHUB_REPOSITORY/releases/assets/$asset" > assets/data/dashboard-data.json
+
+      - name: Check the data's sha256
+        env:
+          SHA256: ${{ inputs.sha256 }}
+        run: echo "$SHA256  assets/data/dashboard-data.json" | sha256sum -c -
+
+      - name: Assemble the site and run the guard
+        run: |
+          mkdir -p _site
+          cp index.html 404.html _site/
+          rsync -a --exclude '.*' assets _site/
+          python3 -I scripts/public-guard.py --site _site
+
+      - name: Setup Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
