@@ -219,7 +219,7 @@
       inner.innerHTML = `<p class="jd-eyebrow jd-hero-eyebrow">The Atlas of Bioinformatics Professions</p>
         <h2>What is a <em>bioinformatician</em>?</h2>
         <div class="jd-hero-side">
-          <p class="jd-hero-sub">We read ${fmt(m.n_postings)} life sciences job postings and grouped them by what they ask people to do. Explore a snapshot of the job profiles including their top duties, skills, and tools, and view who's hiring for those roles around the world.</p>
+          <p class="jd-hero-sub">We read ${fmt(m.n_postings)} life sciences job postings and grouped them by what they ask people to do. Explore a snapshot of the job profiles including their top duties, skills, and tools, and view who's hiring for those roles.</p>
         </div>`;
       r.appendChild(inner);
     }
