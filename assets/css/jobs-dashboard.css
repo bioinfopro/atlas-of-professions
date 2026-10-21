@@ -1,0 +1,432 @@
+/* the site loads Space Grotesk at 500-700 only; the highlight's regular text uses 300 */
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300&display=swap");
+/* Jobs dashboard widget — embeddable on bioinfopro.org.
+   Follows the BioinfoPro Design System: five brand colours + derived tints,
+   tag-pill colours for the job families, no shadows, nothing sticky, one
+   radius, 1px alice-blue borders, spacing 8/16/24/40/64, sentence case except
+   eyebrows and tag pills. Colour: everything
+   inactive is alice blue, the active family is royal orchid, and the open
+   job profile is outlined in dark orchid.
+   Everything is scoped under .jd and reads the site's tokens, falling back to
+   the same values when the widget is shown outside the site. */
+
+.jd {
+  --jd-ink: var(--color-deep-blue, #0B1F35);
+  --jd-ink-muted: var(--color-deep-blue-80, #3B4C5D);
+  --jd-ink-subtle: var(--color-deep-blue-60, #6C7986);
+  --jd-accent-text: var(--color-pacific-blue, #25AEC6);
+  --jd-orchid: var(--color-royal-orchid, #9525AA);
+  --jd-orchid-tint: var(--color-royal-orchid-tint, #F4E4F7);
+  --jd-band: var(--color-alice-blue, #D9E2EC);
+  --jd-muted-surface: var(--color-alice-blue-50, #ECF1F6);
+  --jd-white: var(--color-white, #FFFFFF);
+  --jd-border: var(--color-alice-blue, #D9E2EC);
+  --jd-display: var(--font-display, "Space Grotesk", "Helvetica Neue", Arial, sans-serif);
+  --jd-body: var(--font-body, "Inter", "Helvetica Neue", Arial, sans-serif);
+  --jd-radius: var(--radius, 0.5rem);
+  --jd-s1: var(--space-1, 0.5rem);
+  --jd-s2: var(--space-2, 1rem);
+  --jd-s3: var(--space-3, 1.5rem);
+  --jd-s4: var(--space-4, 2.5rem);
+  --jd-s5: var(--space-5, 4rem);
+  --jd-t: var(--transition-fast, 0.15s ease);
+
+  font-family: var(--jd-body);
+  color: var(--jd-ink);
+  line-height: 1.6;
+  font-size: 1rem;
+}
+.jd *, .jd *::before, .jd *::after { box-sizing: border-box; }
+.jd h2, .jd h3, .jd h4 { font-family: var(--jd-display); font-weight: 600; color: var(--jd-ink); margin: 0; line-height: 1.15; letter-spacing: -0.01em; }
+.jd :where(p) { margin: 0; }   /* zero specificity, so component margins below win */
+.jd button { font: inherit; }
+.jd a:focus-visible, .jd button:focus-visible, .jd select:focus-visible, .jd summary:focus-visible { outline: 3px solid var(--jd-orchid); outline-offset: 2px; }
+
+/* ---------- full-bleed bands (the band is the section separator) ---------- */
+.jd-band { margin-left: calc(50% - 50vw + var(--jd-sbw, 0px) / 2); margin-right: calc(50% - 50vw + var(--jd-sbw, 0px) / 2); }
+/* the hero is deep blue with white type, and the family band alice blue with
+   deep-blue type */
+.jd-band--ink { background: var(--jd-ink); color: var(--jd-white); }
+.jd .jd-band--ink h2 { color: var(--jd-white); }
+.jd-band--profile { background: var(--jd-white); }
+.jd-band--profile .jd-band-inner { padding-top: var(--jd-s3); }
+.jd-band-inner { max-width: var(--container-width, 72rem); margin: 0 auto; padding: var(--jd-s5) var(--jd-s3); }
+.jd-band-inner--tight { padding-top: var(--jd-s3); padding-bottom: 0; }
+
+/* ---------- hero: the finding ---------- */
+/* page grid: 12 equal columns inside the centred container, so every band has
+   the same margins left and right; the hero title and text take the first 7 */
+.jd-hero-inner { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--jd-s4); align-items: end; }
+.jd-hero-eyebrow { grid-column: 1 / -1; }
+.jd-hero h2 { grid-column: 1 / 8; margin-bottom: 0; }
+.jd-hero-side { grid-column: 1 / 8; margin-top: var(--jd-s3); }   /* under the title, as wide as it */
+.jd-eyebrow, .jd-view-q {
+  font-family: var(--jd-body); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--jd-accent-text); margin: 0 0 var(--jd-s2);
+}
+.jd-hero h2 { font-size: clamp(2rem, calc(4vw + 1rem), 3.25rem); }
+.jd-hero-sub { font-size: 1.1rem; opacity: 0.85; }
+/* the highlight: the key finding, large and centred, as wide as the numbers row
+   above; light weight (300) with its two key phrases bold; a 1px rule below */
+.jd-band--highlight { border-bottom: 1px solid var(--jd-border); }
+.jd-band--highlight .jd-band-inner { padding-top: var(--jd-s4); padding-bottom: var(--jd-s4); }
+.jd-highlight { margin: 0; text-align: center; }
+.jd-highlight p { font-family: var(--jd-display); font-weight: 300; font-size: clamp(1.35rem, calc(1.2vw + 1rem), 1.85rem); line-height: 1.35; letter-spacing: -0.01em; color: var(--jd-ink); }
+.jd-highlight b { font-weight: 700; }
+/* the numbers banner: six equal grid columns across the dashboard's width, each
+   number centred in its column, with a 1px rule between columns */
+.jd-band--facts { border-bottom: 1px solid var(--jd-border); }
+.jd-band--facts .jd-band-inner { padding-top: var(--jd-s4); padding-bottom: var(--jd-s4); }
+.jd-facts { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; }
+.jd-facts li { font-size: 0.95rem; color: var(--jd-ink-muted); text-align: center; padding: 0 var(--jd-s2); border-left: 1px solid var(--jd-border); }
+.jd-facts li:first-child { border-left: 0; }
+.jd-facts b { display: block; font-family: var(--jd-display); font-weight: 600; font-size: 2.5rem; line-height: 1.15; letter-spacing: -0.01em; color: var(--jd-orchid); }
+
+/* ---------- family pills + ring + job map: one compact row, widths 2:4:4. The
+   pills stack down the left; the ring is a square about 40% of the window height
+   (plus the room the pills used to take above it), centred in its column; the
+   map fills its column at the same height. The top of the profile shows below
+   the band. ---------- */
+.jd-band--pair { border-bottom: 1px solid var(--jd-border); }
+/* one line (the 1.6 line height = 1.6rem) of visible white above and below
+   the ring + map, inside the rules. Measured to the ink, not the boxes: the map's
+   topmost dot is drawn 11px inside its box, and the "View this as a tree" link hangs
+   8px + one line of its text (0.85rem x 1.6) below the charts' boxes, so the
+   paddings offset those */
+.jd-band--pair .jd-band-inner { padding-top: calc(1.6rem - 11px); padding-bottom: calc(1.6rem + 7px + 0.85rem * 1.6); }
+.jd-pair {
+  /* the ring and map are 10% larger than at first (2:4:4 columns, 40px gaps):
+     the room comes from narrower gaps and a pill column exactly one numbers-banner
+     column wide (1/6), with the ring's column a little wider than the map's (the
+     map's dots don't fill its box sideways, so it loses no size) */
+  display: grid; column-gap: var(--jd-s3); align-items: start;
+  grid-template-columns: calc(100% / 6) minmax(0, 451fr) minmax(0, 421fr);
+  grid-template-areas: "lg rc mc";
+  container-type: inline-size;   /* so the pill column can match one column of the numbers banner */
+}
+.jd-pa-rc { grid-area: rc; position: relative; }   /* slid sideways by spreadPair() */ .jd-pa-mc { grid-area: mc; }
+.jd-pair .jd-pa-rc { aspect-ratio: 1; width: min(max(calc((40vh + 4.5rem) * 1.1), 25.3rem), 100%); justify-self: center; }   /* at least 25.3rem: tall enough for the pill column beside it */   /* .jd-pair: wins over .jd-chart's width */
+/* the map takes the ring's height and the rest of the row's width */
+.jd-pa-mc { align-self: stretch; }
+.jd-pa-mc svg { position: absolute; inset: 0; height: 100%; }
+/* the pill column spans the ring's drawn height: eyebrow level with the ring's
+   top, the pills stacked under it (one line of eyebrow text below it), and the
+   column ending level with the ring's bottom. --jd-ring-top/bottom are set
+   by the script from the drawn ring. */
+.jd-pa-lg {
+  grid-area: lg; align-self: stretch; display: flex; flex-direction: column; align-items: flex-start;
+  padding: var(--jd-ring-top, 0) 0 var(--jd-ring-bottom, 0);
+  --jd-line: calc(0.8rem * 1.6);   /* one line of the eyebrow text (its size × the body line height) */
+}
+.jd-eyebrow--sm { margin-bottom: var(--jd-s1); }
+.jd-pa-lg .jd-eyebrow--sm { margin: 0 0 var(--jd-line); line-height: 1.3; }   /* may wrap to two lines in the narrow column */
+/* the family pills: default tag-pill size, one short line each (PILL_LABELS in
+   the script), stacked from the top; the list fills the column so the link
+   stays at the bottom */
+.jd-pa-lg .jd-legend { flex: 1; margin: 0; flex-direction: column; justify-content: flex-start; align-items: flex-start; }
+.jd .jd-pa-lg .jd-fpill { white-space: nowrap; text-align: left; }
+/* packed at the top: each list item is only as tall as its pill (no line box
+   around it), 6px apart; the rest of the column stays empty */
+.jd-pa-lg .jd-legend { gap: 0.375rem; }
+.jd-pa-lg .jd-legend li { display: flex; }
+/* the default pill padding with 0.68rem text (94% of the default), so the widest
+   label fits the 184px width of "1,070 job postings" above; below the full container
+   width the text shrinks with the band to keep that fit */
+.jd .jd-pa-lg button.jd-fpill { font-size: min(0.68rem, 0.985cqw); padding: 0.25rem min(var(--jd-s2), 1.45cqw); }
+/* "View this as a tree", under the family pills, one line of its text below the
+   charts' boxes (the band's bottom padding is measured to it) */
+.jd-pair { position: relative; }
+.jd .jd-pair > .jd-howto.jd-treelink { position: absolute; left: 0; bottom: calc(-8px - 0.85rem * 1.6); margin: 0; line-height: 1; }
+.jd-tree-full { margin-top: var(--jd-s2); }
+/* text links ("View this as a tree", "Show more"), and the windows they open */
+.jd .jd-howto { margin-top: var(--jd-s2); padding: 0; border: 0; background: none; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--jd-accent-text); text-align: left; transition: color var(--jd-t); }
+.jd-howto::after { content: " \2192"; }
+.jd-howto:hover { color: var(--jd-orchid); }
+.jd-modal { width: min(48rem, calc(100vw - 2rem)); max-height: calc(100vh - 4rem); padding: 0; border: 1px solid var(--jd-ink); border-radius: var(--jd-radius); background: var(--jd-white); color: var(--jd-ink); }
+.jd-modal::backdrop { background: rgba(11, 31, 53, 0.55); }
+.jd-modal-inner { padding: var(--jd-s3); overflow-y: auto; max-height: calc(100vh - 4rem); }
+.jd-modal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--jd-s2); margin-bottom: var(--jd-s2); }
+.jd-modal-head h3 { font-size: 1.5rem; }
+.jd .jd-modal-close { flex: none; width: 2.25rem; height: 2.25rem; border: 1px solid var(--jd-border); border-radius: var(--jd-radius); background: var(--jd-white); color: var(--jd-ink); font-size: 1.4rem; line-height: 1; cursor: pointer; transition: border-color var(--jd-t), color var(--jd-t); }
+.jd-modal-close:hover { border-color: var(--jd-orchid); color: var(--jd-orchid); }
+.jd-modal-sum { font-size: 0.95rem; color: var(--jd-ink-muted); margin-top: 0.25rem; }
+.jd-pair + .jd-view, .jd-view + .jd-view { margin-top: var(--jd-s5); }
+
+/* ---------- views ---------- */
+.jd-grid-2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--jd-s4); }
+.jd-view { min-width: 0; }
+.jd-grid-2 + .jd-view { margin-top: var(--jd-s5); }
+.jd-view-head { margin-bottom: var(--jd-s3); }
+.jd-view h3, .jd-pair h3 { font-size: 1.75rem; }
+.jd-view-summary { opacity: 0.85; margin-top: var(--jd-s2); max-width: var(--measure, 42rem); }
+/* a view's heading on the page grid, like the hero: question across, title on
+   columns 1-7, summary on 8-12 */
+.jd-view > .jd-view-head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--jd-s4); align-items: end; }
+.jd-view > .jd-view-head .jd-view-q { grid-column: 1 / -1; }
+.jd-view > .jd-view-head h3 { grid-column: 1 / 8; }
+.jd-view > .jd-view-head .jd-view-summary { grid-column: 8 / -1; margin-top: 0; }
+.jd-chart { position: relative; width: 100%; }
+.jd-chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+
+/* family tag pills (design system section 9): text + tint pair, never split */
+.jd-tag {
+  display: inline-block; padding: 0.25rem var(--jd-s2); border-radius: 999px; white-space: nowrap;
+  font-family: var(--jd-body); font-weight: 600; font-size: 0.72rem; line-height: 1.2;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--tag-text); background: var(--tag-tint);
+}
+.jd-legend { display: flex; flex-wrap: wrap; gap: var(--jd-s1); margin: var(--jd-s3) 0 0; padding: 0; list-style: none; }
+.jd-legend .jd-tag b { font-weight: 700; margin-left: 0.25rem; }
+
+/* family pills: alice blue, royal orchid when their family is active */
+.jd-fpill { border: 0; color: var(--jd-ink); background: var(--jd-band); transition: background-color var(--jd-t), color var(--jd-t); }
+.jd button.jd-fpill { cursor: pointer; font-family: var(--jd-body); font-size: 0.72rem; font-weight: 600; line-height: 1.2; letter-spacing: 0.08em; }
+button.jd-fpill:hover { background: var(--jd-orchid-tint, #F4E4F7); }
+.jd-fpill.is-active, button.jd-fpill.is-active:hover { background: var(--jd-orchid); color: var(--jd-white); }
+button.jd-fpill.is-hover:not(.is-active) { background: var(--jd-orchid-tint, #F4E4F7); }   /* hovered on another view */
+
+/* tooltip: flat, bordered (no shadow) */
+.jd-tip {
+  position: fixed; z-index: 50; pointer-events: none; max-width: 20rem;
+  background: var(--jd-white); color: var(--jd-ink); border: 1px solid var(--jd-ink); border-radius: var(--jd-radius);
+  padding: var(--jd-s1) var(--jd-s2); font-size: 0.85rem; line-height: 1.4;
+  opacity: 0; transition: opacity var(--jd-t);
+}
+.jd-tip.is-on { opacity: 1; }
+.jd-tip b { font-family: var(--jd-display); font-weight: 600; font-size: 0.95rem; display: block; }
+.jd-tip .jd-tip-sub { color: var(--jd-ink-muted); }
+
+/* chart marks */
+.jd-arc { cursor: pointer; }
+.jd-ring-center { font-family: var(--jd-display); fill: var(--jd-ink); text-anchor: middle; dominant-baseline: middle; }
+.jd-ring-center.jd-ring-name { font-weight: 700; }
+.jd-ring-center.jd-ring-eyebrow { font-family: var(--jd-body); font-weight: 600; letter-spacing: 0.08em; fill: var(--jd-accent-text); }
+.jd-ring-center.jd-ring-sub { font-family: var(--jd-body); fill: var(--jd-ink-muted); }
+.jd-dot { cursor: pointer; }
+.jd-map-label { font-family: var(--jd-display); font-weight: 600; font-size: 13px; fill: var(--jd-ink); paint-order: stroke; stroke: var(--jd-white); stroke-width: 4px; pointer-events: none; }
+.jd-node-label { font-family: var(--jd-body); font-size: 12px; fill: var(--jd-ink); }
+.jd-node-label.is-muted { fill: var(--jd-ink-subtle); }
+/* the family pills on the tree's branch points: the legend pills' type */
+.jd-tree-fpill text { font-family: var(--jd-body); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; }
+.jd-link { fill: none; cursor: pointer; transition: stroke-opacity var(--jd-t); }
+
+/* ---------- the selected job family: an alice-blue band above the picker ---------- */
+/* the name and, under it, the description in the first 8 of 12 columns (2/3);
+   the job-flavours thumbnail in the last 4 (1/3; empty when there is none), its
+   top level with the name's */
+.jd-band--fam { background: var(--jd-band); color: var(--jd-ink); }
+.jd-band--fam .jd-band-inner { padding-top: var(--jd-s4); padding-bottom: var(--jd-s4); }
+.jd-famband { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--jd-s4); align-items: start; }
+.jd-famband-eyebrow { grid-column: 1 / 9; grid-row: 1; }
+.jd .jd-famband-eyebrow { color: var(--jd-ink-muted); }   /* pacific blue is too faint on alice */
+.jd-famband-name { grid-column: 1 / 9; grid-row: 2; }
+.jd .jd-famband-name { color: var(--jd-ink); font-size: 2rem; margin-bottom: var(--jd-s2); }
+.jd-famband-desc { grid-column: 1 / 9; grid-row: 3; font-size: 1.1rem; opacity: 0.85; }
+/* the thumbnail spans to an empty last row (1fr) that takes its extra height, so
+   the name and description stay together */
+.jd-famband { grid-template-rows: auto auto auto 1fr; }
+/* the thumbnail runs from the eyebrow's top to the bottom of the band's content */
+.jd-famband-chart { grid-column: 9 / -1; grid-row: 1 / 5; align-self: stretch; display: flex; flex-direction: column; }
+/* the thumbnail: the same chart, small, on white; the whole card opens the window */
+.jd .jd-famband-thumb { flex: 1; display: flex; flex-direction: column; width: 100%; padding: var(--jd-s1); border: 1px solid var(--jd-border); border-radius: var(--jd-radius); background: var(--jd-white); color: var(--jd-ink); cursor: zoom-in; text-align: left; transition: border-color var(--jd-t); }
+.jd-famband-thumb:hover { border-color: var(--jd-orchid); }
+/* the chart fills the card's height above the caption, scaled to fit; drawn out
+   of flow so it never adds to the band's measured height */
+.jd-famband-svg { flex: 1; position: relative; min-height: 9rem; pointer-events: none; }
+.jd-famband-svg svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.jd-famband-cap { display: flex; justify-content: space-between; align-items: center; gap: var(--jd-s1); font-size: 0.85rem; font-weight: 600; color: var(--jd-ink-muted); margin-top: 0.25rem; }
+.jd-famband-icon { width: 1.1rem; height: 1.1rem; flex: none; transition: color var(--jd-t); }
+.jd-famband-thumb:hover .jd-famband-icon { color: var(--jd-orchid); }
+/* the full-size chart's window, wide enough for the chart's labels */
+.jd-modal--wide { width: min(72rem, calc(100vw - 2rem)); }
+.jd-famsankey-sec + .jd-famsankey-sec { margin-top: var(--jd-s3); }
+.jd-famsankey-sec .jd-modal-sum { margin-bottom: var(--jd-s2); }
+.jd-still, .jd-still * { cursor: default; }
+
+/* ---------- closing band: "How can the atlas help me?" ---------- */
+/* deep blue like the hero; three panels side by side that unfold, each on a
+   faint white wash with a faint white rule (no shadows) */
+.jd-band--help .jd-band-inner { padding-top: var(--jd-s5); padding-bottom: var(--jd-s5); }
+.jd-help h2 { font-size: clamp(1.75rem, calc(2vw + 1rem), 2.5rem); max-width: 50rem; text-wrap: balance; }
+.jd-help-lede { font-size: 1.1rem; opacity: 0.85; max-width: 46rem; margin-top: var(--jd-s2); }
+.jd-help-panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--jd-s3); align-items: start; margin-top: var(--jd-s4); }
+.jd-help-panel { border: 1px solid rgba(255, 255, 255, 0.2); border-radius: var(--jd-radius); background: rgba(255, 255, 255, 0.06); }
+.jd-help-panel summary { display: flex; align-items: center; gap: var(--jd-s2); padding: var(--jd-s2) var(--jd-s3); cursor: pointer; list-style: none; font-family: var(--jd-display); font-weight: 600; font-size: 1.15rem; }
+.jd-help-panel summary::-webkit-details-marker { display: none; }
+.jd-help-panel summary:hover .jd-help-toggle { color: var(--jd-accent-text); }
+.jd-help-icon { display: grid; place-items: center; flex: none; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: rgba(255, 255, 255, 0.1); color: var(--jd-accent-text); }
+.jd-help-icon svg { width: 1.25rem; height: 1.25rem; }
+.jd-help-title { flex: 1; }
+.jd-help-toggle { flex: none; font-family: var(--jd-body); font-weight: 400; font-size: 1.5rem; line-height: 1; transition: color var(--jd-t); }
+.jd-help-toggle::before { content: "+"; }
+.jd-help-panel[open] .jd-help-toggle::before { content: "\2212"; }
+.jd-help-body { padding: 0 var(--jd-s3) var(--jd-s3); display: flex; flex-direction: column; align-items: flex-start; }
+/* every open panel is as tall as the tallest one (--jd-help-h, measured by the
+   script); the button sits at the bottom */
+.jd-help-panel[open] .jd-help-body { min-height: var(--jd-help-h, auto); }
+.jd-help-body .jd-btn { margin-top: auto; }
+.jd-help-body p { opacity: 0.85; }
+/* each offer with a pacific-blue tick */
+.jd-help-body ul { list-style: none; margin: var(--jd-s1) 0 var(--jd-s3); padding: 0; }
+.jd-help-body li { position: relative; padding-left: 1.6rem; opacity: 0.85; }
+.jd-help-body li + li { margin-top: var(--jd-s1); }
+.jd-help-body li::before { content: "\2713"; position: absolute; left: 0.2rem; color: var(--jd-accent-text); font-weight: 700; }
+/* the call to action: the site's primary button, royal orchid with white text
+   in every state (a darker orchid on hover); scoped tightly so the site's own
+   link colours never restyle it */
+.jd-btn {
+  display: inline-block; font-family: var(--jd-body); font-weight: 600; font-size: 0.95rem; line-height: 1.4;
+  padding: var(--jd-s1) var(--jd-s3); border-radius: var(--jd-radius); border: 1px solid transparent;
+  background: var(--jd-orchid); color: var(--jd-white); text-decoration: none; cursor: pointer;
+  transition: background-color var(--jd-t), color var(--jd-t);
+}
+.jd a.jd-btn, .jd a.jd-btn:link, .jd a.jd-btn:visited { background: var(--jd-orchid); color: var(--jd-white); text-decoration: none; }
+.jd a.jd-btn:hover, .jd a.jd-btn:focus-visible { background: #761C87; color: var(--jd-white); }
+
+/* ---------- choose a job type ---------- */
+.jd-bar-eyebrow { margin-bottom: var(--jd-s1); }
+/* the label, then the select only as wide as its longest option (one line),
+   together at the right edge of the page */
+.jd-bar { display: grid; grid-template-columns: auto auto; justify-content: end; align-items: center; gap: var(--jd-s1) var(--jd-s2); }
+.jd-bar label { font-weight: 600; }
+.jd-select {
+  font: inherit; font-size: 0.95rem; color: var(--jd-ink); padding: var(--jd-s1) var(--jd-s2);
+  border: 1px solid var(--jd-border); border-radius: var(--jd-radius); background: var(--jd-white);
+  width: auto; max-width: 100%; transition: border-color var(--jd-t);
+}
+.jd-select:hover { border-color: var(--jd-accent-text); }
+
+/* ---------- the profile ---------- */
+/* the profile's head: the text in the first 8 of 12 columns (2/3), the facts
+   card (seniority, sectors, common titles) in the last 4 (1/3) */
+.jd-card-head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--jd-s4); align-items: start; }
+.jd-card-head > div { grid-column: 1 / 9; min-width: 0; }
+/* both columns take the row's height; the text column spreads its three blocks
+   (title + subtitle, description, top employers) evenly over it, so the last
+   line of pills always sits level with the facts card's bottom edge */
+.jd-card-head { align-items: stretch; }
+.jd-card-head > div { display: flex; flex-direction: column; justify-content: space-between; gap: var(--jd-s2); }
+.jd-card-head .jd-card-desc, .jd-card-head .jd-employers { margin: 0; }
+/* the facts card is a filled light-blue panel, not a bordered white card like the
+   duties/skills/tools cards below, so it reads as the profile's own small banner:
+   the pacific-blue tint, with labels and icons a darker step of pacific blue
+   (#136A78, 5.6:1 on the tint; the site's pacific-blue-dark #1B8B9E is only
+   3.6:1). White rules and white icon discs on it. */
+.jd-facts-card { grid-column: 9 / -1; list-style: none; margin: 0; padding: var(--jd-s3); background: var(--color-pacific-blue-tint, #E3F5F8); border-radius: var(--jd-radius); }
+.jd-fact { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); gap: var(--jd-s2); align-items: start; }
+.jd-fact + .jd-fact { border-top: 1px solid var(--jd-white); margin-top: var(--jd-s2); padding-top: var(--jd-s2); }
+.jd-fact-icon { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--jd-white); color: #136A78; }
+.jd-fact-icon svg { width: 1.25rem; height: 1.25rem; }
+.jd-fact-label { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #136A78; }   /* pacific blue itself is too faint on its tint */
+.jd-fact-value { font-size: 0.95rem; line-height: 1.4; margin-top: 0.125rem; }
+.jd-fact-titles { list-style: none; margin: 0; padding: 0; }
+.jd-fact-titles li + li { margin-top: 0.125rem; }
+.jd-card h3 { font-size: 2.5rem; }
+/* a flavour's profile: the job type is the title and the flavour the subtitle */
+.jd-card-sub { font-family: var(--jd-display); font-weight: 500; font-size: 1.5rem; line-height: 1.2; color: var(--jd-ink-muted); margin-top: var(--jd-s1); }
+.jd-card-desc { font-size: 1.1rem; opacity: 0.85; margin: var(--jd-s2) 0; }
+.jd-employers { margin-top: var(--jd-s3); }
+.jd-employers h4 { font-family: var(--jd-body); font-size: 0.95rem; font-weight: 600; letter-spacing: 0; margin-bottom: var(--jd-s1); }
+/* top employers: pills as long as their text (one line), in rank order, wrapped
+   left to right so each line fills before the next starts. Light grey: a
+   near-neutral grey (#F0F1F3) with the site's
+   deep-blue-80 text (#3B4C5D) */
+.jd-employers ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: flex-start; gap: var(--jd-s1); }
+.jd-employers li { display: inline-flex; align-items: center; white-space: nowrap; }
+.jd-emp-pill { display: inline-flex; align-items: baseline; gap: 0.375rem; font-size: 0.85rem; line-height: 1.2; padding: 0.3rem 0.75rem; border-radius: 999px; color: var(--jd-ink-muted); background: #F0F1F3; }
+.jd-emp-pill b { font-weight: 500; }
+.jd-emp-pill span { font-family: var(--jd-display); font-weight: 600; }
+/* "Show more": a plain link right after the last pill, on its line */
+.jd .jd-howto.jd-emp-more { margin: 0 0 0 var(--jd-s2); }
+.jd-employers--all { margin-top: var(--jd-s2); }
+
+/* job flavours: a small Sankey from the job type to its flavours */
+.jd-flavours { margin-top: var(--jd-s4); }
+.jd-flavours h4 { font-size: 1.15rem; margin-bottom: var(--jd-s1); }
+.jd-flavours-intro { font-size: 0.85rem; color: var(--jd-ink-muted); margin-bottom: var(--jd-s2); }
+.jd-flavours-chart { background: var(--jd-white); border: 1px solid var(--jd-border); border-radius: var(--jd-radius); padding: var(--jd-s2); }
+.jd-fnode { cursor: pointer; outline: none; }
+.jd-fnode:focus-visible rect { stroke: var(--jd-orchid); stroke-width: 3px; }
+.jd-flabel { font-family: var(--jd-body); font-size: 13px; fill: var(--jd-ink); }
+.jd-flabel-sub { font-family: var(--jd-body); font-size: 12px; fill: var(--jd-ink-muted); }
+.jd-flabel-tools { font-family: var(--jd-body); font-size: 12px; fill: var(--jd-ink-muted); }
+
+.jd-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--jd-s3); margin-top: var(--jd-s4); }
+.jd-col { background: var(--jd-white); border: 1px solid var(--jd-border); border-radius: var(--jd-radius); padding: var(--jd-s3); min-width: 0; }
+.jd-col h4 { font-size: 1.15rem; margin-bottom: var(--jd-s2); }
+.jd-rows { list-style: none; margin: 0; padding: 0; }
+.jd-row { padding: var(--jd-s1) 0; border-bottom: 1px solid var(--jd-border); }
+.jd-row:last-child { border-bottom: 0; }
+.jd-row-top { display: flex; justify-content: space-between; gap: var(--jd-s1); font-size: 0.95rem; line-height: 1.4; }
+.jd-row-label { min-width: 0; overflow-wrap: anywhere; font-weight: 700; }
+.jd-row-pct { font-family: var(--jd-display); font-weight: 600; white-space: nowrap; }
+.jd-row-ex { font-size: 0.77rem;   /* 1pt below the 0.85rem caption size */ color: var(--jd-ink-muted); line-height: 1.4; overflow-wrap: anywhere; }
+/* bar from 0% to this job's share (in its family's darker colour); deep-blue tick = all job postings */
+.jd-track { position: relative; height: 14px; margin: 0.25rem 0; }
+.jd-track::before { content: ""; position: absolute; left: 0; right: 0; top: 4px; height: 6px; background: var(--jd-border); border-radius: 3px; }
+.jd-track-bar { position: absolute; left: 0; top: 4px; height: 6px; background: var(--fam); border-radius: 3px; }
+.jd-track-all { position: absolute; top: 0; width: 2px; height: 14px; margin-left: -1px; background: var(--jd-ink); border-radius: 1px; box-sizing: content-box; border: 0 solid var(--jd-white); border-width: 0 1px; }
+.jd-empty { color: var(--jd-ink-muted); font-size: 0.95rem; }
+.jd-key { display: flex; flex-wrap: wrap; gap: var(--jd-s1) var(--jd-s3); font-size: 0.85rem; color: var(--jd-ink-muted); margin-top: var(--jd-s2); }
+.jd-key span { display: inline-flex; align-items: center; gap: var(--jd-s1); }
+.jd-key i { display: inline-block; }
+.jd-key .k-bar { width: 16px; height: 6px; border-radius: 3px; background: var(--fam); }
+.jd-key .k-tick { width: 2px; height: 12px; background: var(--jd-ink); }
+
+.jd-status { padding: var(--jd-s4) 0; color: var(--jd-ink-muted); }
+.jd-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.jd-table th, .jd-table td { text-align: left; padding: var(--jd-s1); border-bottom: 1px solid var(--jd-border); }
+.jd-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.jd-visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* the title chart needs its width to stay readable: on narrow screens it
+   scrolls sideways inside its own box instead of shrinking */
+.jd-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.jd-scroll-hint { display: none; font-size: 0.85rem; color: var(--jd-ink-muted); margin-bottom: var(--jd-s1); }
+
+@media (max-width: 64rem) {
+  .jd-facts { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: var(--jd-s3); }
+  .jd-facts li:nth-child(3n + 1) { border-left: 0; }
+}
+@media (max-width: 48rem) {
+  .jd-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .jd-facts li:nth-child(n) { border-left: 1px solid var(--jd-border); }   /* undo the 3-column rule */
+  .jd-facts li:nth-child(2n + 1) { border-left: 0; }
+  .jd-facts b { font-size: 1.75rem; }
+  .jd-pair { grid-template-columns: minmax(0, 1fr); grid-template-areas: "lg" "rc" "mc"; }
+  .jd-pa-lg { display: block; padding: 0; margin-bottom: var(--jd-s3); }
+  .jd-pa-lg .jd-legend { display: flex; margin: var(--jd-s1) 0 var(--jd-s2); max-width: none; justify-content: flex-start; gap: var(--jd-s1); }
+  .jd-pa-lg .jd-eyebrow--sm { margin-bottom: 0; }
+  .jd-hero h2, .jd-hero-side, .jd-view > .jd-view-head h3, .jd-view > .jd-view-head .jd-view-summary { grid-column: 1 / -1; }
+  .jd-view > .jd-view-head .jd-view-summary { margin-top: var(--jd-s2); }
+  .jd-hero h2 { margin-bottom: var(--jd-s2); }
+  .jd-bar { grid-template-columns: minmax(0, auto); }
+  .jd-help-panels { grid-template-columns: minmax(0, 1fr); }
+  .jd-famband-eyebrow, .jd-famband-name, .jd-famband-desc, .jd-famband-chart { grid-column: 1 / -1; }
+  .jd-famband { grid-template-rows: none; }
+  .jd-famband-chart { grid-row: 4; }
+  .jd-famband-chart { margin-top: var(--jd-s3); max-width: 20rem; }
+  .jd-pa-lg .jd-legend { flex-direction: row; }   /* on phones the pills wrap in rows above the ring */
+  .jd .jd-pa-lg button.jd-fpill { font-size: 0.68rem; }   /* no numbers column to match on phones */
+  .jd-pair .jd-pa-rc, .jd-pair .jd-pa-mc { width: min(40vh, 100%); justify-self: center; aspect-ratio: 1; }
+  .jd-pair .jd-pa-mc { margin-top: var(--jd-s4); }
+  .jd-grid-2, .jd-cols { grid-template-columns: minmax(0, 1fr); }
+  .jd-card-head > div, .jd-facts-card { grid-column: 1 / -1; }
+  .jd-facts-card { margin-top: var(--jd-s3); }
+  .jd-tag { white-space: normal; text-align: left; }
+  .jd-scroll svg { min-width: 760px; }
+  .jd-flavours-chart.jd-scroll svg { min-width: 900px; }
+  .jd-scroll-hint { display: block; }
+  .jd-grid-2 { gap: var(--jd-s5); }
+  .jd-card h3 { font-size: 1.75rem; }
+  .jd-card-sub { font-size: 1.2rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jd *, .jd *::before, .jd *::after { transition: none !important; transform: none !important; }
+}
+
+/* on a bioinfopro.org page the widget sits in .page-inner: pull the first and
+   last bands flush with the header and footer, as .hero--breakout does */
+.page-inner > .jd:first-child { margin-top: calc(-1 * var(--space-4, 2.5rem)); }
+.page-inner > .jd:last-child { margin-bottom: calc(-1 * var(--space-5, 4rem)); }

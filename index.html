@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<!-- The Atlas page: the widget inside the main site's header, footer and stylesheet. All links to its own files are relative, so it works under any base path. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The job landscape | Association of Bioinformatics Professionals</title>
+  
+  <meta name="description" content="Home of the Association of Bioinformatics Professionals">
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="https://bioinfopro.org/assets/css/main.css">
+  <link type="application/atom+xml" rel="alternate" href="https://bioinfopro.org/feed.xml" title="Association of Bioinformatics Professionals" />
+  <link rel="stylesheet" href="assets/css/jobs-dashboard.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <nav class="site-nav" aria-label="Primary">
+  <div class="nav-inner">
+    <a class="wordmark" href="https://bioinfopro.org/">Association of Bioinformatics Professionals</a>
+
+    <ul class="nav-links">
+      <li>
+        <a
+          class="nav-link"
+          href="https://bioinfopro.org/"
+          
+        >Home</a>
+      </li>
+      <li>
+        <a
+          class="nav-link"
+          href="https://bioinfopro.org/about/"
+          
+        >About</a>
+      </li>
+      <li>
+        <a
+          class="nav-link"
+          href="https://bioinfopro.org/community/"
+          
+        >Community</a>
+      </li>
+      <li>
+        <a
+          class="nav-link"
+          href="https://bioinfopro.org/services/"
+          
+        >Services</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+  </header>
+
+  <main id="main-content">
+    <div class="page-inner">
+      <div class="jd" data-src="assets/data/dashboard-data.json" data-default-family="Genomics &amp; Computational Biology Research"></div>
+    </div>
+  </main>
+  <script src="assets/vendor/d3.min.js"></script>
+  <script src="assets/vendor/d3-sankey.min.js"></script>
+  <script src="assets/js/jobs-dashboard.js" defer></script>
+
+  <footer class="site-footer">
+  <div class="footer-inner">
+    <p>Association of Bioinformatics Professionals &copy; 2026</p>
+    <p>Founded in 2026, based in Toronto, Canada.</p>
+    <p>Questions? Reach us at <a href="mailto:info@bioinfopro.org">info@bioinfopro.org</a>.</p>
+  </div>
+</footer>
+
+</body>
+</html>

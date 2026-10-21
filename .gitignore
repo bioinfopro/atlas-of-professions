@@ -1,0 +1,5 @@
+# The data is fetched from the export folder (scripts/fetch-data.sh) and never committed.
+assets/data/
+# Local settings: where the export folder is. Never committed.
+.atlas-local
+.DS_Store
