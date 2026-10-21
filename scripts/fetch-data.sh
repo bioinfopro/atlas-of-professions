@@ -1,16 +1,13 @@
 #!/usr/bin/env bash
-# Fetch the Atlas site from the export folder into this repo.
+# Fetch the Atlas data from the export folder into assets/data/ (gitignored).
 #
 #   scripts/fetch-data.sh              the latest release
 #   scripts/fetch-data.sh 2026-10a     a given release
 #
-# The export folder is the master copy of the whole site, widget included.
-# Each release there is <id>/ with manifest.json and site/. This replaces the
-# repo's site files (index.html, 404.html, assets/) with the release's site/,
-# after checking every file against the manifest. Edit the widget in the
-# export folder, never here: a fetch overwrites local edits. The data
-# (assets/data/) is gitignored and never committed; the rest is committed so
-# the repo shows which widget is deployed.
+# This repo is the only home of the site (page, widget, vendored D3). The
+# export folder holds the data releases: <id>/ with dashboard-data.json and
+# manifest.json. The page draws whatever data file is in assets/data/, so a
+# new release needs no code change. The data is never committed.
 #
 # The export folder's location is read from .atlas-local (gitignored, never
 # committed), one line:
@@ -20,6 +17,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 REPO="$(pwd -P)"
+DATA="dashboard-data.json"
 
 die() { echo "fetch-data: $*" >&2; exit 1; }
 
@@ -54,56 +52,26 @@ else
 fi
 SRC="$EXPORT_DIR/$RELEASE"
 [ -f "$SRC/manifest.json" ] || die "release $RELEASE has no manifest.json"
-[ -d "$SRC/site" ] || die "release $RELEASE has no site/"
+[ -f "$SRC/$DATA" ] || die "release $RELEASE has no $DATA"
 
-# Copy the release's site/ to a staging folder, then check the copy itself:
-# exactly the manifest's site files, each with its size and sha256, and only
-# files the site layout allows.
-STAGE="$(mktemp -d)"
-trap 'rm -rf "$STAGE"' EXIT
-cp -R "$SRC/site" "$STAGE/site"
-cp "$SRC/manifest.json" "$STAGE/manifest.json"
-python3 -I - "$STAGE" <<'EOF' || die "release $RELEASE failed its checks (nothing changed here)"
-import hashlib, json, os, re, sys
-stage = sys.argv[1]
-name = r"[a-z0-9][a-z0-9.-]*"
-layout = re.compile(r"^site/(?:(?:index|404)\.html|assets/(?:"
-                    rf"css/{name}\.css|js/{name}\.js|vendor/{name}\.js|data/{name}\.json|"
-                    rf"diagrams/{name}\.(?:svg|png|webp)|fonts/{name}\.woff2))$")
-listed = {f["path"]: f for f in json.load(open(os.path.join(stage, "manifest.json")))["files"]
-          if f["path"].startswith("site/")}
-present = set()
-for dirpath, _, names in os.walk(os.path.join(stage, "site")):
-    for n in names:
-        present.add(os.path.relpath(os.path.join(dirpath, n), stage).replace(os.sep, "/"))
-problems = [f"{p}: not in the site layout" for p in sorted(present) if not layout.match(p)]
-problems += [f"{p}: not in the manifest" for p in sorted(present - set(listed))]
-problems += [f"{p}: in the manifest but missing" for p in sorted(set(listed) - present)]
-for p in sorted(present & set(listed)):
-    full = os.path.join(stage, p)
-    data = open(full, "rb").read()
-    if len(data) != listed[p]["bytes"] or hashlib.sha256(data).hexdigest() != listed[p]["sha256"]:
-        problems.append(f"{p}: does not match the manifest")
-for p in ("site/index.html", "site/404.html", "site/assets/data/dashboard-data.json"):
-    if p not in present:
-        problems.append(f"{p}: missing")
-for line in problems:
-    print("fetch-data: " + line, file=sys.stderr)
-sys.exit(1 if problems else 0)
+# The manifest's record of the data file: "<bytes> <sha256>".
+expected="$(python3 -I - "$SRC/manifest.json" "$DATA" <<'EOF'
+import json, sys
+manifest, path = sys.argv[1], sys.argv[2]
+entry = {f["path"]: f for f in json.load(open(manifest))["files"]}.get(path)
+if entry:
+    print(entry["bytes"], entry["sha256"])
 EOF
+)"
+[ -n "$expected" ] || die "release $RELEASE's manifest does not list $DATA"
 
-# Replace the repo's site files with the checked copy. Only index.html,
-# 404.html and assets/ are touched; a file the release dropped is removed.
-cp "$STAGE/site/index.html" "$STAGE/site/404.html" .
-mkdir -p assets
-rsync -a --delete "$STAGE/site/assets/" assets/
-echo "fetch-data: release $RELEASE -> index.html, 404.html, assets/ (every file checked against its manifest)"
-if git rev-parse --git-dir >/dev/null 2>&1; then
-  changed="$(git status --porcelain -- index.html 404.html assets)"
-  if [ -n "$changed" ]; then
-    echo "fetch-data: site files changed by this fetch (commit them with the deploy):"
-    echo "$changed"
-  else
-    echo "fetch-data: site files unchanged"
-  fi
-fi
+# Copy to a temp file, check the copy, then move it into place.
+mkdir -p assets/data
+tmp="$(mktemp assets/data/.fetch.XXXXXX)"
+trap 'rm -f "$tmp"' EXIT
+cp "$SRC/$DATA" "$tmp"
+actual="$(wc -c < "$tmp" | tr -d ' ') $(shasum -a 256 "$tmp" | cut -d ' ' -f 1)"
+[ "$actual" = "$expected" ] || die "release $RELEASE's data file does not match its manifest"
+mv "$tmp" "assets/data/$DATA"
+trap - EXIT
+echo "fetch-data: release $RELEASE -> assets/data/$DATA ($(echo "$actual" | cut -d ' ' -f 1) bytes, sha256 checked)"
