@@ -29,12 +29,20 @@
   --jd-s3: var(--space-3, 1.5rem);
   --jd-s4: var(--space-4, 2.5rem);
   --jd-s5: var(--space-5, 4rem);
+  /* the 12-column page grid's gap: 2.5rem at the full container width (3.65% of
+     the 1104px grid inside the 72rem band is 40px), a share of the grid's own
+     width below it, so its 11 gaps never take more than 40% of the row and the
+     grid fits any screen */
+  --jd-gap: min(var(--jd-s4), 3.65%);
   --jd-t: var(--transition-fast, 0.15s ease);
 
   font-family: var(--jd-body);
   color: var(--jd-ink);
   line-height: 1.6;
   font-size: 1rem;
+  /* iOS Safari enlarges text it judges too small, which pushes lines past their boxes */
+  -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
+  overflow-wrap: break-word;   /* a long word or URL wraps instead of widening the page */
 }
 .jd *, .jd *::before, .jd *::after { box-sizing: border-box; }
 .jd h2, .jd h3, .jd h4 { font-family: var(--jd-display); font-weight: 600; color: var(--jd-ink); margin: 0; line-height: 1.15; letter-spacing: -0.01em; }
@@ -56,7 +64,7 @@
 /* ---------- hero: the finding ---------- */
 /* page grid: 12 equal columns inside the centred container, so every band has
    the same margins left and right; the hero title and text take the first 7 */
-.jd-hero-inner { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--jd-s4); align-items: end; }
+.jd-hero-inner { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--jd-gap); align-items: end; }
 .jd-hero-eyebrow { grid-column: 1 / -1; }
 .jd-hero h2 { grid-column: 1 / 8; margin-bottom: 0; }
 .jd-hero-side { grid-column: 1 / 8; margin-top: var(--jd-s3); }   /* under the title, as wide as it */
@@ -161,7 +169,7 @@
 .jd-view-summary { opacity: 0.85; margin-top: var(--jd-s2); max-width: var(--measure, 42rem); }
 /* a view's heading on the page grid, like the hero: question across, title on
    columns 1-7, summary on 8-12 */
-.jd-view > .jd-view-head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--jd-s4); align-items: end; }
+.jd-view > .jd-view-head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--jd-gap); align-items: end; }
 .jd-view > .jd-view-head .jd-view-q { grid-column: 1 / -1; }
 .jd-view > .jd-view-head h3 { grid-column: 1 / 8; }
 .jd-view > .jd-view-head .jd-view-summary { grid-column: 8 / -1; margin-top: 0; }
@@ -217,7 +225,7 @@ button.jd-fpill.is-hover:not(.is-active) { background: var(--jd-orchid-tint, #F4
    top level with the name's */
 .jd-band--fam { background: var(--jd-band); color: var(--jd-ink); }
 .jd-band--fam .jd-band-inner { padding-top: var(--jd-s4); padding-bottom: var(--jd-s4); }
-.jd-famband { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--jd-s4); align-items: start; }
+.jd-famband { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--jd-gap); align-items: start; }
 .jd-famband-eyebrow { grid-column: 1 / 9; grid-row: 1; }
 .jd .jd-famband-eyebrow { color: var(--jd-ink-muted); }   /* pacific blue is too faint on alice */
 .jd-famband-name { grid-column: 1 / 9; grid-row: 2; }
@@ -244,7 +252,7 @@ button.jd-fpill.is-hover:not(.is-active) { background: var(--jd-orchid-tint, #F4
 .jd-famsankey-sec .jd-modal-sum { margin-bottom: var(--jd-s2); }
 .jd-still, .jd-still * { cursor: default; }
 
-/* ---------- closing band: "How can the atlas help me?" ---------- */
+/* ---------- closing band: "How can this help me?" ---------- */
 /* deep blue like the hero; three panels side by side that unfold, each on a
    faint white wash with a faint white rule (no shadows) */
 .jd-band--help .jd-band-inner { padding-top: var(--jd-s5); padding-bottom: var(--jd-s5); }
@@ -300,7 +308,7 @@ button.jd-fpill.is-hover:not(.is-active) { background: var(--jd-orchid-tint, #F4
 /* ---------- the profile ---------- */
 /* the profile's head: the text in the first 8 of 12 columns (2/3), the facts
    card (seniority, sectors, common titles) in the last 4 (1/3) */
-.jd-card-head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--jd-s4); align-items: start; }
+.jd-card-head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--jd-gap); align-items: start; }
 .jd-card-head > div { grid-column: 1 / 9; min-width: 0; }
 /* both columns take the row's height; the text column spreads its three blocks
    (title + subtitle, description, top employers) evenly over it, so the last
@@ -334,6 +342,10 @@ button.jd-fpill.is-hover:not(.is-active) { background: var(--jd-orchid-tint, #F4
    deep-blue-80 text (#3B4C5D) */
 .jd-employers ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: flex-start; gap: var(--jd-s1); }
 .jd-employers li { display: inline-flex; align-items: center; white-space: nowrap; }
+/* a name longer than the whole line (on a phone) wraps inside its pill */
+.jd-employers li { max-width: 100%; }
+.jd-emp-pill { min-width: 0; white-space: normal; }
+.jd .jd-emp-more { white-space: nowrap; }
 .jd-emp-pill { display: inline-flex; align-items: baseline; gap: 0.375rem; font-size: 0.85rem; line-height: 1.2; padding: 0.3rem 0.75rem; border-radius: 999px; color: var(--jd-ink-muted); background: #F0F1F3; }
 .jd-emp-pill b { font-weight: 500; }
 .jd-emp-pill span { font-family: var(--jd-display); font-weight: 600; }

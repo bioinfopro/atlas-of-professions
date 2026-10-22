@@ -231,12 +231,12 @@
       const m = this.d.meta;
       const CONTACT_URL = "https://tally.so/r/Ar721B";   // the contact form, the same for every panel
       const panels = [
-        ["seeker", "I am a job seeker", [
+        ["seeker", "I am a student or job seeker", [
           "See where your CV falls based on your specific skills and experience.",
           "Learn what alternative careers you could transition into and the skills you’d need.",
           "Get a list of employers that hire for your specific profiles.",
         ]],
-        ["educator", "I am an educator", [
+        ["educator", "I am an educator or program administrator", [
           "Identify gaps in your life sciences curriculum based on current market data.",
           "Decide what AI/ML skills are worth incorporating in your programming.",
           "Remain competitive by increasing the job-readiness of your graduates.",
@@ -247,7 +247,7 @@
         ]],
       ];
       const box = el("div", { class: "jd-help" });
-      box.innerHTML = `<h2>How can The Atlas of Bioinformatics Professions help me?</h2>
+      box.innerHTML = `<h2>How can this help me?</h2>
         <p class="jd-help-lede">The full atlas contains ${fmt(m.n_duties)} job duties, ${fmt(m.n_skills)} different skills, and ${fmt(m.n_tool_categories)} tool categories, including ${fmt(m.n_languages)} programming languages and ${fmt(m.n_assays)} wet-lab assays. Job postings span ${fmt(m.n_countries)} countries and ${fmt(m.n_employers)} employers.</p>
         <div class="jd-help-panels">${panels.map(([icon, title, offers]) => `<details class="jd-help-panel">
             <summary><span class="jd-help-icon">${ICONS[icon]}</span><span class="jd-help-title">${title}</span><span class="jd-help-toggle" aria-hidden="true"></span></summary>
