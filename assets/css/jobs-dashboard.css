@@ -74,6 +74,7 @@
 }
 .jd-hero h2 { font-size: clamp(2rem, calc(4vw + 1rem), 3.25rem); }
 .jd-hero-sub { font-size: 1.1rem; opacity: 0.85; }
+.jd-hero-cta { margin-top: var(--jd-s3); }
 /* the highlight: the key finding, large and centred, as wide as the numbers row
    above; light weight (300) with its two key phrases bold; a 1px rule below */
 .jd-band--highlight { border-bottom: 1px solid var(--jd-border); }
@@ -258,7 +259,7 @@ button.jd-fpill.is-hover:not(.is-active) { background: var(--jd-orchid-tint, #F4
 .jd-band--help .jd-band-inner { padding-top: var(--jd-s5); padding-bottom: var(--jd-s5); }
 .jd-help h2 { font-size: clamp(1.75rem, calc(2vw + 1rem), 2.5rem); max-width: 50rem; text-wrap: balance; }
 .jd-help-lede { font-size: 1.1rem; opacity: 0.85; max-width: 46rem; margin-top: var(--jd-s2); }
-.jd-help-panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--jd-s3); align-items: start; margin-top: var(--jd-s4); }
+.jd-help-panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--jd-s3); align-items: start; margin-top: var(--jd-s4); }
 .jd-help-panel { border: 1px solid rgba(255, 255, 255, 0.2); border-radius: var(--jd-radius); background: rgba(255, 255, 255, 0.06); }
 .jd-help-panel summary { display: flex; align-items: center; gap: var(--jd-s2); padding: var(--jd-s2) var(--jd-s3); cursor: pointer; list-style: none; font-family: var(--jd-display); font-weight: 600; font-size: 1.15rem; }
 .jd-help-panel summary::-webkit-details-marker { display: none; }
@@ -275,6 +276,9 @@ button.jd-fpill.is-hover:not(.is-active) { background: var(--jd-orchid-tint, #F4
 .jd-help-panel[open] .jd-help-body { min-height: var(--jd-help-h, auto); }
 .jd-help-body .jd-btn { margin-top: auto; }
 .jd-help-body p { opacity: 0.85; }
+/* the students and job seekers offer, open in the band under the lede */
+.jd-help-main { padding: 0; margin-top: var(--jd-s3); max-width: 46rem; }
+.jd-help-main .jd-btn { margin-top: 0; }
 /* each offer with a pacific-blue tick */
 .jd-help-body ul { list-style: none; margin: var(--jd-s1) 0 var(--jd-s3); padding: 0; }
 .jd-help-body li { position: relative; padding-left: 1.6rem; opacity: 0.85; }

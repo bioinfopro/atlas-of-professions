@@ -60,14 +60,14 @@
   // the family selected when the page opens (its pill also comes first), unless
   // the page's <div class="jd" data-default-family="..."> names another
   const DEFAULT_FAMILY = "Genomics & Computational Biology Research";
-  const N_EMP_PILLS = 5;   // top employers shown on the profile; "Show more" opens the full top 10
+  const REPORT_URL = "https://tally.so/r/laB9o5";   // the personalized-report form: the hero's button and the seeker offer's
+  const N_EMP_PILLS = 5;  // top employers shown on the profile; "Show more" opens the full top 10
 
   // line icons for the profile's facts card (24px grid, drawn in currentColor)
   const icon = (paths) => `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
   const ICONS = {
     seniority: icon(`<path d="M3 20h4v-4h4v-4h4V8h4V4h2"/>`),   // steps
     sector: icon(`<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4M10 10h4M10 14h4M10 18h4"/>`),   // buildings
-    seeker: icon(`<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>`),   // magnifier
     educator: icon(`<path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>`),   // mortarboard
     hiring: icon(`<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>`),   // briefcase
     title: icon(`<path d="M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z"/><circle cx="7.5" cy="7.5" r="1"/>`),   // tag
@@ -220,22 +220,24 @@
         <h2>What is a <em>bioinformatician</em>?</h2>
         <div class="jd-hero-side">
           <p class="jd-hero-sub">We read ${fmt(m.n_postings)} life sciences job postings and grouped them by what they ask people to do. Explore a snapshot of the job profiles including their top duties, skills, and tools, and view who's hiring for those roles.</p>
+          <a class="jd-btn jd-hero-cta" href="${REPORT_URL}" target="_blank" rel="noopener">See who's hiring for your skills</a>
         </div>`;
       r.appendChild(inner);
     }
 
-    // ---------- closing band: how the atlas helps three kinds of reader, each a
-    // panel that unfolds into what we offer and a "Contact us" button (the
-    // contact form, opened in a new tab).
+    // ---------- closing band: how the atlas helps. What we offer students and job
+    // seekers sits open in the band, with a "Get your personalized report" button;
+    // educators and employers each get a panel that unfolds into what we offer
+    // and a "Contact us" button. Both forms open in a new tab.
     renderHelp(r) {
       const m = this.d.meta;
       const CONTACT_URL = "https://tally.so/r/Ar721B";   // the contact form, the same for every panel
+      const seekerOffers = [
+        "See where your CV falls based on your specific skills and experience.",
+        "Learn what alternative careers you could transition into and the skills you’d need.",
+        "Get a list of employers that hire for your specific profiles.",
+      ];
       const panels = [
-        ["seeker", "I am a student or job seeker", [
-          "See where your CV falls based on your specific skills and experience.",
-          "Learn what alternative careers you could transition into and the skills you’d need.",
-          "Get a list of employers that hire for your specific profiles.",
-        ]],
         ["educator", "I am an educator or program administrator", [
           "Identify gaps in your life sciences curriculum based on current market data.",
           "Decide what AI/ML skills are worth incorporating in your programming.",
@@ -249,6 +251,11 @@
       const box = el("div", { class: "jd-help" });
       box.innerHTML = `<h2>How can this help me?</h2>
         <p class="jd-help-lede">The full atlas contains ${fmt(m.n_duties)} job duties, ${fmt(m.n_skills)} different skills, and ${fmt(m.n_tool_categories)} tool categories, including ${fmt(m.n_languages)} programming languages and ${fmt(m.n_assays)} wet-lab assays. Job postings span ${fmt(m.n_countries)} countries and ${fmt(m.n_employers)} employers.</p>
+        <div class="jd-help-body jd-help-main">
+          <p>With our atlas, we can help you:</p>
+          <ul>${seekerOffers.map((o) => `<li>${esc(o)}</li>`).join("")}</ul>
+          <a class="jd-btn" href="${REPORT_URL}" target="_blank" rel="noopener">Get your personalized report</a>
+        </div>
         <div class="jd-help-panels">${panels.map(([icon, title, offers]) => `<details class="jd-help-panel">
             <summary><span class="jd-help-icon">${ICONS[icon]}</span><span class="jd-help-title">${title}</span><span class="jd-help-toggle" aria-hidden="true"></span></summary>
             <div class="jd-help-body">
