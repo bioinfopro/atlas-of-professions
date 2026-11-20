@@ -50,7 +50,7 @@
   const PILL_LABELS = {
     "ML Platform & GenAI Engineering": "Gen-AI engineering",
     "Genomics & Computational Biology Research": "Genomics/CompBio",
-    "Clinical Research & Medical Affairs Leadership": "Clinical research",
+    "Clinical Development, Biostatistics & Medical Affairs": "Clinical development",
     "Lab-Based Assay & Disease Model Research": "Wetlab-based",
     "Generative ML for Biomolecular Design": "Biomolecular design",
     "Real-World & Clinical Data Science": "Clinical data science",
@@ -416,12 +416,21 @@
           ["Hover", "the ring", "to explore"].forEach((ln, i) => line((i - 1) * 46, "jd-ring-name", 38, ln));
           return;
         }
-        const info = this.hoverInfo(h), lines = wrapWords(info.name, 16);
+        // a slash is a break point too, so "A/B" names can wrap after the slash
+        const info = this.hoverInfo(h), lines = wrapWords(info.name.replace(/\/(?=\S)/g, "/ "), 16).map((ln) => ln.replace(/\/ /g, "/"));
         const size = lines.length > 3 ? 25 : 29, lh = size * 1.15;
         const y0 = -(lines.length * lh + 56) / 2;   // the block: eyebrow, name lines, count
         line(y0 + 9, "jd-ring-eyebrow", 17, info.level.toUpperCase());
         lines.forEach((ln, i) => line(y0 + 42 + i * lh, "jd-ring-name", size, ln));
         line(y0 + 42 + lines.length * lh + 10, "jd-ring-sub", 21, `${fmt(info.n)} job postings · ${pct(info.share)}`);
+        // a name line wider than the hole at its height (a long word that can't
+        // wrap) shrinks all the name lines together until the widest one fits
+        const hole = ringR[1] - 12, names = center.selectAll(".jd-ring-name").nodes();
+        const k = Math.min(1, ...names.map((n) => {
+          const y = +n.getAttribute("y"), edge = Math.max(Math.abs(y - 0.75 * size), Math.abs(y + 0.2 * size));
+          return 2 * Math.sqrt(Math.max(0, hole * hole - edge * edge)) / (n.getComputedTextLength() || 1);
+        }));
+        if (k < 1) names.forEach((n) => { n.style.fontSize = `${size * k}px`; });
       };
       // the family pills: the toggles (identity is never colour alone)
       const legend = el("ul", { class: "jd-legend", "aria-label": "Job families: choose one" });
